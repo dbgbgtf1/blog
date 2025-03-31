@@ -2,6 +2,7 @@
 title: printf格式化的奇思妙想
 date: 2024-9-5
 categories: 日常研究
+tag: printf
 ---
 # 起因
 前两天火箭发给我一个奇怪的东西

@@ -1,7 +1,8 @@
 ---
 title: 一道异或手搓shellcode
 date: 2024-9-1
-categories: shellcode
+categories: some-ctf
+tag: shellcode
 ---
 # 审题
 ![main](./alphacode/main.png)

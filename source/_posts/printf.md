@@ -2,6 +2,7 @@
 title: 神奇的printf
 date: 2024-8-26
 categories: das*merak-ctf
+tag: printf
 ---
 > 感谢rocket师傅提供的解题思路！！https://rocketmadev.github.io/2024/09/04/clock/
 

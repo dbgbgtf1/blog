@@ -2,6 +2,7 @@
 title: pwn-college的一道arm rop题
 date: 2024-10-13
 categories: 日常研究
+tag: arm
 ---
 # 前言
 最近是在[Rocket](https://rocketmadev.github.io/)安利下去看了[pwncollege](https://pwn.college/)这个网站，然后感觉还不错，armdojo已经快刷完了，就差一题！！！但是最后一题好难啊，看了好几个小时没思路。

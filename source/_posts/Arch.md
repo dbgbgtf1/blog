@@ -1,7 +1,7 @@
 ---
 title: 终于还是用上了Arch
 date: 2025-3-28
-categories: beyond-ctf 
+categories: beyond-ctf
 ---
 
 # 前言

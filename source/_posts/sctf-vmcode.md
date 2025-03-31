@@ -2,6 +2,7 @@
 title: 2024-sctf
 date: 2024-10-2
 categories: 2024-sctf
+tag: vm
 ---
 # 前言
 比赛那两天偷懒了，两天都只打了半天，到晚上就不想看了。

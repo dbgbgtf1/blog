@@ -1,7 +1,7 @@
 ---
 title: cloudflare搭建个人博客
 date: 2025-03-31
-categories: 日常研究
+categories: beyong-ctf
 tags: cloudflare
 ---
 > 特别鸣谢[火箭马先生](https://rocketma.dev)和不知名int姓先生

@@ -2,6 +2,7 @@
 title: houseofapple2
 date: 2024-8-19
 categories: 日常研究
+tag: houseof
 ---
 # 前言
 houseofapple2应该是我的IO系列引路人了，一直被glibc里面的源码吓得头大，各种条件也是搞得不明不白的，一般只能照抄网上的条件去触发。

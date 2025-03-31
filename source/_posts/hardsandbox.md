@@ -2,6 +2,7 @@
 title: 2024-羊城杯hardsandbox
 date: 2024-9-10
 categories: 2024-羊城杯
+tag: ptrace
 ---
 # 前言
 这次羊城杯我和火箭发挥的异常的好，pwn5题出了4题，很可惜hardsandbox这题没出。主要是没见过RET_TRACE的沙箱，没有积累过此类板子。

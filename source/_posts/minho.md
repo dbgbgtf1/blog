@@ -2,6 +2,7 @@
 title: housofminho
 date: 2024-08-01
 categories: 日常研究
+tag: houseof
 ---
 # 前言
 `houseofminho`最早是在宁波赛上遇到的，没想到这玩意给了我迎头痛击。当时老觉得这些过于复杂的堆利用有点钻牛角尖了，实战意义不大，但是现在想想，还是得认真学这些。
