@@ -9,7 +9,7 @@ houseofapple2应该是我的IO系列引路人了，一直被glibc里面的源码
 现在我的本地设置好了源码调试，又有各种符号表等等，总之我决定啃下houseofapple2，这篇文章暂时先总结houseofapple2的最低触发条件，下次试试把这些条件整合到一起，力求以最小内存大小实现houseofapple2触发
 # 调试过程
 我们知道houseofapple2的调用链是
-```
+```c
 exit
 ->__run_exit_handlers
 ->_IO_cleanup
@@ -31,7 +31,7 @@ exit
 ### _IO_flush_all_lockp->_IO_OVERFLOW
 ![io_flush_all_lockp_call_io_overflow](./apple2/io_flush_all_lockp_call_io_overflow.png)
 
-```    
+```c
 if  (
         (
             (fp->_mode <= 0 && fp->_IO_write_ptr > fp->_IO_write_base)
@@ -46,7 +46,7 @@ if  (
 ```
 我们需要进入_IO_OVERFLOW，所以显然我们要满足在` && _IO_OVERFLOW(fp,EOF) == EOF`之前的条件
 也就是在`(fp->_mode <= 0 && fp->_IO_write_ptr > fp->_IO_write_base)`与
-```
+```c
 (   _IO_vtable_offset (fp) == 0
     && fp->_mode > 0
     && (fp->_wide_data->_IO_write_ptr > fp->_wide_data->_IO_write_base)
@@ -56,7 +56,7 @@ if  (
 ### _IO_OVERFLOW->_IO_wdoallocbuf
 ![io_overflow_call_io_wdoallocbuf](./apple2/io_overflow_call_io_wdoallocbuf.png)
 在这张图中可以看到必须不满足`if (f->_flags & _IO_NO_WRITES)`以及满足
-```
+```c
 if ((f->_flags & _IO_CURRENTLY_PUTTING) == 0)
   {
     if (f->_wide_data->_IO_write_base == 0)
@@ -79,7 +79,7 @@ _IO_flush_all_lockp->_IO_OVERFLOW
 _IO_OVERFLOW->_IO_wdoallocbuf
 需要不满足`if (f->_flags & _IO_NO_WRITES)`
 以及满足
-```
+```c
 if ((f->_flags & _IO_CURRENTLY_PUTTING) == 0)
   {
     if (f->_wide_data->_IO_write_base == 0)
@@ -100,7 +100,7 @@ fp->_wide_data->_wide_vtable+0x68 == &system
 
 总结到这一步，发现其实也没想象中那么复杂，很多条件都是0，在内存中有时候本来就是0，根本不需要特别设置。
 然后是我写的demo
-```
+```c
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
