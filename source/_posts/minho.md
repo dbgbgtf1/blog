@@ -1,7 +1,7 @@
 ---
 title: housofminho
 date: 2024-08-01
-categories: beyond-ctf
+categories: some-ctf
 tag: houseof
 ---
 # 前言
