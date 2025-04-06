@@ -5,7 +5,7 @@ article:
   auto:cover: false
   auto_excerpt: 100
 menubar:
-  columns: 4
+  columns: 5
   items: 
     - id: article
       theme: ''
@@ -30,6 +30,12 @@ menubar:
       title: 友链
       icon: ''
       url: /friends/
+
+    - id: about
+      theme: ''
+      title: 我的
+      icon: ''
+      url: /about/
 search:
   service: local_search
   local_search:
