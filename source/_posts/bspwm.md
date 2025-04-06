@@ -8,7 +8,7 @@ tags: Linux
 最开始我用ArchLinux(其实也就一个月左右吧)，是用的🚀推荐的kde全家桶
 kde的优点和缺点都很明确
 
-优点:向windows,更适合平滑过度
+优点:像windows,更适合平滑过度
 缺点:密码的我为什么要用一个Linux版本的windows,甚至一些细节还不如windows
 
 最开始我只是觉得kde自带的窗口管理器有点烦
