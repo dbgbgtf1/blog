@@ -2,6 +2,7 @@
 title: 终于还是用上了Arch
 date: 2025-3-28
 categories: beyond-ctf
+tags: Linux
 ---
 
 # 前言

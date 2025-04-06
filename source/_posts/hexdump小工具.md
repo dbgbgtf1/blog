@@ -1,7 +1,7 @@
 ---
 title: 自己编译一个lib库
 date: 2024-12-13 20:54:48
-catogories: 日常研究
+catogories: beyond-ctf
 tag: coding
 ---
 # 前言

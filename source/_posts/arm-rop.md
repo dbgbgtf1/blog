@@ -1,7 +1,7 @@
 ---
 title: pwn-college的一道arm rop题
 date: 2024-10-13
-categories: 日常研究
+categories: beyond-ctf
 tag: arm
 ---
 # 前言

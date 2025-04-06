@@ -1,7 +1,7 @@
 ---
 title: ptrace沙箱
 date: 2024-12-18
-categories: 日常研究
+categories: beyond-ctf
 tag: ptrace
 ---
 # 前言

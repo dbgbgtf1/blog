@@ -1,8 +1,8 @@
 ---
 title: old style glibc：用邮箱发送patch
 date: 2025-04-03 
-categories: 
-tags: 
+categories: beyond-ctf
+tags: glibc-patch
 ---
 > 特别鸣谢[🚀](https://rocketma.dev)帮助我配置邮箱等等
 

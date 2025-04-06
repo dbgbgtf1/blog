@@ -1,7 +1,7 @@
 ---
 title: 记录搭建arm调试环境
 date: 2024-9-27
-categories: 日常研究
+categories: beyond-ctf
 tag: arm
 ---
 # 前言
