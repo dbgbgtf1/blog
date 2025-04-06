@@ -19,7 +19,7 @@ GitHub:https://github.com/dbgbgtf1
 - 编辑器:NeoVim
 - 窗口管理器:bspwm+sxhkd
 - etc
-我有几篇博客介绍了大致配置过程https://dbgtf.org/bspwm/
+我有几篇博客介绍了大致配置过程
 
 [ArchLinux](https://dbgtf.org/Arch/)
 [bspwm](https://dbgtf.org/bspwm/)
