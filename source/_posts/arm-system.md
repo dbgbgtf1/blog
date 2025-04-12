@@ -1,7 +1,7 @@
 ---
 title: qemu-system-aarch64完整环境搭建
 date: 2024-10-27
-tags: beyond-ctf
+categories: beyond-ctf
 tag: arm
 ---
 # 前言
