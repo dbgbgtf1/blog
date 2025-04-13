@@ -12,7 +12,7 @@ tags: 开源
 - 可定制性高，时不时可以自己换换配色
 - 轻松分屏，临时执行一些任务
 
-[tmux](./polybar/tmux.png)
+![tmux](./polybar/tmux.png)
 
 自从我上次换掉`kde`自带的窗口管理器`kwin`之后，
 就一直在用`bspwm`作为我的平铺式窗口管理器，同时`polybar`做状态栏
