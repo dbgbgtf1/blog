@@ -1,7 +1,7 @@
 ---
 title: printf格式化的奇思妙想
 date: 2024-9-5
-categories: beyond-ctf
+categories: ctf
 tag: printf
 ---
 # 起因

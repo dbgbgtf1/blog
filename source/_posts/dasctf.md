@@ -1,7 +1,7 @@
 ---
 title: das*cbctf出题笔记
 date: 2024-10-23
-categories: beyond-ctf
+categories: das-ctf
 tag: 出题
 ---
 # 前言
