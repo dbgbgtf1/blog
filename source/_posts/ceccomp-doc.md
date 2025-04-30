@@ -21,6 +21,15 @@ Note that the Line Code JT JF K are not necessary part of `text`, I just decided
 
 **So be sure to understand what `text` and `bpf` means**
 
+### Install Guide
+
+Only github install is available now:)
+
+`git clone git@github.com:dbgbgtf1/Ceccomp.git`
+`cd Ceccomp`
+`make ceccomp`
+`make install`
+
 ### Dump
 
 #### what dump does
