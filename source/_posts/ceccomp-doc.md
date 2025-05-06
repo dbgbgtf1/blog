@@ -25,10 +25,12 @@ Note that the Line Code JT JF K are not necessary part of `text`, I just decided
 
 Only github install is available now:)
 
-`git clone git@github.com:dbgbgtf1/Ceccomp.git`
-`cd Ceccomp`
-`make ceccomp`
-`make install`
+```
+git clone git@github.com:dbgbgtf1/Ceccomp.git
+cd Ceccomp
+make ceccomp
+make install
+```
 
 ### Dump
 

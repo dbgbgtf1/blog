@@ -17,7 +17,7 @@ GitHub:https://github.com/dbgbgtf1
 目前在用
 - 系统:ArchLinux
 - 编辑器:NeoVim
-- 窗口管理器:bspwm+sxhkd
+- 窗口管理器:bspwm
 - etc
 我有几篇博客介绍了大致配置过程
 
