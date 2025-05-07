@@ -30,6 +30,12 @@ menubar:
       title: 我的
       icon: ''
       url: /about/
+
+    - id: pictures
+      theme: ''
+      title: 图库
+      icon: ''
+      url: /pictures/
 search:
   service: local_search
   local_search:
