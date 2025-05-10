@@ -14,39 +14,41 @@ raw `bpf` might look like this
 
 After Ceccomp resolve the `bpf`, it can print it to `human readable text`
 Might look like this
-![text.png](./ceccomp-doc/text.png)
+![trace](./ceccomp-doc/trace.png)
 
 I will call the `human readable text` with `text` later
 Note that the Line Code JT JF K are not necessary part of `text`, I just decided to print it
 
 **So be sure to understand what `text` and `bpf` means**
 
+Here is a brief introduction of what `ceccomp` can do
+![help](./ceccomp-doc/help.png)
+
 ### Install Guide
 
 Only github install is available now:)
-
 ```
 git clone git@github.com:dbgbgtf1/Ceccomp.git
 cd Ceccomp
 make ceccomp
-make install
+sudo make install
 ```
 
-### Dump
+### Trace
 
-#### what dump does
+#### what trace does
 
-Dump mode can dump program `bpf` out, and then print it out to `text`
+Trace mode can trace program `bpf` out, and then print it out to `text`
 
 > It can be useful when you want to know what seccomp a program loads
 
-#### what dump looks like
+#### what trace looks like
 
-![dump](./ceccomp-doc/dump.png)
+![trace](./ceccomp-doc/trace.png)
 
-#### dump usages
+#### trace usages
 
-`ceccomp --dump program [ program-args ]`, add program-args if necessary
+`ceccomp --trace program [ program-args ]`, add program-args if necessary
 
 Find a program that will load seccomp
 
@@ -116,7 +118,7 @@ I designed asm this way, copying `bpf` will be easier
 
 `ceccomp --asm arch text`
 
-Just like disasm, emu, `arch` must be specified, then add the `text
+Just like disasm, emu, `arch` must be specified, then add the `text`
 And you can write you own `text`, asm will asm `text` to `bpf`
 
 ## Supported architecture
