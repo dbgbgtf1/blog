@@ -4,27 +4,44 @@ date: 2025-4-29
 categories: beyond-ctf
 tag: 开源
 ---
-## Doc
+# NAME
 
-> some concept to be clear
+ceccomp - the seccomp analyze tools
 
-Kernel load the seccomp with raw `bpf`
-raw `bpf` might look like this
-![raw_bpf](./ceccomp-doc/raw_bpf.png)
+# SYNOPSIS
 
-After Ceccomp resolve the `bpf`, it can print it to `human readable text`
-Might look like this
+```
+usage: ceccomp [subcommand] [args] [options]
+    [subcommand]: asm|disasm|emu|trace|version|help
+```
+
+# CONCEPT
+
+Kernel load the seccomp with ***RAW BPF BYTES***  
+which may look like this
+![raw](./ceccomp-doc/raw.png)
+
+After ceccomp resolve the ***RAW BPF BYTES***, it can print out ***HUMAN READABLE TEXT***  
+May look like this
 ![trace](./ceccomp-doc/trace.png)
 
-I will call the `human readable text` with `text` later
-Note that the Line Code JT JF K are not necessary part of `text`, I just decided to print it
+I will call ***HUMAN READABLE TEXT*** with ***TEXT***
+, and ***RAW BPF BYTES*** with ***RAW*** later
 
-**So be sure to understand what `text` and `bpf` means**
+Note that the `Line CODE JT JF K` are not necessary part of ***TEXT***, I just decided to print it  
 
-Here is a brief introduction of what `ceccomp` can do
-![help](./ceccomp-doc/help.png)
+> So be sure to understand what ***TEXT*** and ***RAW*** means
 
-### Install Guide
+# DESCRIPTION
+
+ceccomp is a seccomp analyze tool written in C.
+
+Asm can transfer ***TEXT*** to ***RAW***  
+Disasm can transfer ***RAW*** to ***TEXT***  
+Emu can show what will happen(KILL?ALLOW?TRACE?) when the given syscall_nr are called.  
+Trace can atomaticlly trace the given program, and try to analyze its seccomp rules.
+
+### INSTALL
 
 Only github install is available now:)
 ```
@@ -36,113 +53,85 @@ sudo make install
 
 ### Trace
 
-#### what trace does
+`ceccomp trace PROGRAM [ program-args ]`
 
-Trace mode can trace program `bpf` out, and then print it out to `text`
+Trace can trace program ***RAW*** out, and then print it out to ***TEXT***
 
 > It can be useful when you want to know what seccomp a program loads
 
-#### what trace looks like
-
+Example:  
 ![trace](./ceccomp-doc/trace.png)
-
-#### trace usages
-
-`ceccomp --trace program [ program-args ]`, add program-args if necessary
-
-Find a program that will load seccomp
 
 ### Emulate
 
-#### what emu does
+`ceccomp emu [ --arch= ] bpftext syscall_nr [ args[0-5] ip ]`
 
 Emulate what will happen if `syscall (nr, args ...)` were called
 
-> It can be useful when you don't want to read `text`
+`args[0-5]` and `ip`(instruction pointer) are default as 0  
+`arch` is set to your cpu arch when not specified  
+(This is only tested in x86_64 and aarch64, if anything goes wrong, open an issue plz
 
-#### what emu looks like
+> It can be useful when you don't want to read ***TEXT***
 
-A code block won't show color, so take a look at the picture
-
+Example:  
 ![emu](./ceccomp-doc/emu.png)
 
-#### emu usages
+### Disassemble
 
-`ceccomp --emu text arch nr [ argv[0] - argv[5] ]`
-(default as 0)
+`ceccomp disasm [ --arch= ] bpftext`
 
-`arch` must be specified
-Otherwise the Ceccomp can't transfer something like `write` to its syscallnr
+Disassemble from ***RAW*** to ***TEXT***
 
-### Disasm
+`arch` is set to your cpu arch when not specified  
+(This is only tested in x86_64 and aarch64, if anything goes wrong, open an issue plz
 
-#### what disasm does
+> It can be useful when the program don't load seccomp at once  
+> So you can use gdb to get the ***RAW*** manually, Disasm will do the rest for you
 
-Disasm from `bpf` to `text`
-
-> It can be useful when the program don't load seccomp at once
-
-So you can use gdb to get the raw `bpf` manualy, Disasm will do the rest for you
-
-#### what disasm looks like
-
+Example:  
 ![disasm](./ceccomp-doc/disasm.png)
 
-#### disasm usages
+### Assemble
 
-`ceccomp --disasm arch xxx.bpf`
+`ceccomp asm [ --arch= ] [ --fmt= ] bpftext`
 
-Just like emu, arch must be specified
-Then just add the `bpf` you want to resolve
+Assemble the ***TEXT*** to ***RAW***
 
-### Asm
-
-#### what asm does
-
-Asm the `bpf` from `text`
+`arch` is set to your cpu arch when not specified  
+(This is only tested in x86_64 and aarch64, if anything goes wrong, open an issue plz  
+`fmt` can be set to `hexfmt`, `raw` and `hexline`, default as `hexline`
 
 > It could be useful when you need to write your own seccomp
 
 (but make sure you write the asm in correct way
+I might write a simple guide about the asm rules)
 
-I might write a simple guide about the basic rules)
+![asm_format](./ceccomp-doc/asm_format.png)
 
-#### what asm looks like
+# SUPPORTED ARCH
 
-It might look too simple
-I designed asm this way, copying `bpf` will be easier
+- i386
+- x86_64
+- x32
+- arm
+- aarch64
+- mips
+- mipsel
+- mipsel64
+- mipsel64n32
+- parisc
+- parisc64
+- ppc
+- ppc64
+- ppc64le
+- s390
+- s390x
+- riscv64
 
-![asm](./ceccomp-doc/asm.png)
-
-#### asm usages
-
-`ceccomp --asm arch text`
-
-Just like disasm, emu, `arch` must be specified, then add the `text`
-And you can write you own `text`, asm will asm `text` to `bpf`
-
-## Supported architecture
-- X86
-- X86-64
-- X32
-- ARM
-- AARCH64
-- MIPS
-- MIPSEL
-- MIPSEL64
-- MIPSEL64N32
-- PARISC
-- PARISC64
-- PPC
-- PPC64
-- PPC64LE
-- S390
-- S390X
-- RISCV64
-
-## I Need You
+# I Need You
 
 Tell me what do you think!
 Pull request or issue is welcome!
 
-`https://github.com/dbgbgtf1/Ceccomp`
+[Project Repo](https://github.com/dbgbgtf1/Ceccomp)
