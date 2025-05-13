@@ -36,14 +36,17 @@ Note that the `Line CODE JT JF K` are not necessary part of ***TEXT***, I just d
 
 ceccomp is a seccomp analyze tool written in C.
 
-Asm can transfer ***TEXT*** to ***RAW***  
-Disasm can transfer ***RAW*** to ***TEXT***  
+Asm can assemble ***TEXT*** to ***RAW***  
+Disasm can disassemble ***RAW*** to ***TEXT***  
 Emu can show what will happen(KILL?ALLOW?TRACE?) when the given syscall_nr are called.  
-Trace can atomaticlly trace the given program, and try to analyze its seccomp rules.
+Trace can atomaticlly trace the given [ program or pid ], and try to analyze its seccomp rules.
 
-### INSTALL
+# INSTALL
 
-Only github install is available now:)
+For archlinux users, try `yay ceccomp`
+It's on the aur repo now!
+
+For others, github install is available now:)
 ```
 git clone git@github.com:dbgbgtf1/Ceccomp.git
 cd Ceccomp
@@ -51,40 +54,30 @@ make ceccomp
 sudo make install
 ```
 
-### Trace
+# USAGE
 
-`ceccomp trace PROGRAM [ program-args ]`
+## Assemble
 
-Trace can trace program ***RAW*** out, and then print it out to ***TEXT***
+`ceccomp asm [ --arch= ] [ --fmt= ] bpftext`
 
-> It can be useful when you want to know what seccomp a program loads
+Assemble the ***TEXT*** to ***RAW***
 
-Example:  
-![trace](./ceccomp-doc/trace.png)
+`fmt` can be set to `hexfmt`, `raw` and `hexline`, default as `hexline`
 
-### Emulate
+> It could be useful when you need to write your own seccomp
 
-`ceccomp emu [ --arch= ] bpftext syscall_nr [ args[0-5] ip ]`
-
-Emulate what will happen if `syscall (nr, args ...)` were called
-
-`args[0-5]` and `ip`(instruction pointer) are default as 0  
-`arch` is set to your cpu arch when not specified  
-(This is only tested in x86_64 and aarch64, if anything goes wrong, open an issue plz
-
-> It can be useful when you don't want to read ***TEXT***
+But make sure you write the asm in correct way  
+I might write a simple guide about the asm rules  
+Before that, take the disasm result as example
 
 Example:  
-![emu](./ceccomp-doc/emu.png)
+![asm_format](./ceccomp-doc/asm_format.png)
 
-### Disassemble
+## Disassemble
 
 `ceccomp disasm [ --arch= ] bpftext`
 
 Disassemble from ***RAW*** to ***TEXT***
-
-`arch` is set to your cpu arch when not specified  
-(This is only tested in x86_64 and aarch64, if anything goes wrong, open an issue plz
 
 > It can be useful when the program don't load seccomp at once  
 > So you can use gdb to get the ***RAW*** manually, Disasm will do the rest for you
@@ -92,24 +85,50 @@ Disassemble from ***RAW*** to ***TEXT***
 Example:  
 ![disasm](./ceccomp-doc/disasm.png)
 
-### Assemble
+## Emulate
 
-`ceccomp asm [ --arch= ] [ --fmt= ] bpftext`
+`ceccomp emu [ --arch= ] bpftext syscall_nr [ args[0-5] ip ]`
 
-Assemble the ***TEXT*** to ***RAW***
+Emulate what will happen if `syscall (nr, args ...)` were called
 
-`arch` is set to your cpu arch when not specified  
+`args[0-5]` and `ip`(instruction pointer) are default as 0  
+
+> It can be useful when you don't want to read ***TEXT***
+
+Example:  
+![emu](./ceccomp-doc/emu.png)
+
+## Trace
+
+`ceccomp trace [ PROGRAM [ program-args ]]|[ --pid= [ --arch= ] ]`
+
+Trace can trace program ***RAW*** out, and then print it out to ***TEXT***  
+Trace can also trace a specified pid, and then print the filter of pid out to ***TEXT***  
+(note that sudo is necessary for pid trace)
+
+> It can be useful when you want to know what seccomp a program or a pid loads
+
+Example:  
+![trace](./ceccomp-doc/trace.png)
+
+> Special thanks for [rocketma](https://rocketma.dev/) for zsh completion script  
+> It's aswesome and has everything you need   
+
+![trace_completion](./ceccomp-doc/trace_completion.png)
+
+> I trace chromium seccomp with `--pid=`
+
+![trace_chrome](./ceccomp-doc/trace_pid.png)
+
+## Option
+
+`arch` is an option can be used in `asm disasm emu trace`
+
+`arch` can be set to your cpu arch when not specified  
+if this won't work for you, `--arch=` will be necessary
 (This is only tested in x86_64 and aarch64, if anything goes wrong, open an issue plz  
-`fmt` can be set to `hexfmt`, `raw` and `hexline`, default as `hexline`
 
-> It could be useful when you need to write your own seccomp
-
-(but make sure you write the asm in correct way
-I might write a simple guide about the asm rules)
-
-![asm_format](./ceccomp-doc/asm_format.png)
-
-# SUPPORTED ARCH
+## SUPPORTED ARCH
 
 - i386
 - x86_64
