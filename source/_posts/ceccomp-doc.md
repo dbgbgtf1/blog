@@ -128,7 +128,7 @@ Example:
 if this won't work for you, `--arch=` will be necessary
 (This is only tested in x86_64 and aarch64, if anything goes wrong, open an issue plz  
 
-## SUPPORTED ARCH
+# SUPPORTED ARCH
 
 - i386
 - x86_64
