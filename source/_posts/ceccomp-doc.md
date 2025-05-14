@@ -71,7 +71,11 @@ I might write a simple guide about the asm rules
 Before that, take the disasm result as example
 
 Example:  
-![asm_format](./ceccomp-doc/asm_format.png)
+> `--fmt` examples
+
+![asm_raw](./ceccomp-doc/asm_raw.png)  
+![asm_hexline](./ceccomp-doc/asm_hexline.png)  
+![asm_hexfmt](./ceccomp-doc/asm_hexfmt.png)
 
 ## Disassemble
 
@@ -97,6 +101,9 @@ Emulate what will happen if `syscall (nr, args ...)` were called
 
 Example:  
 ![emu](./ceccomp-doc/emu.png)
+> '--quiet' mode can be useful when you only need result
+
+![emu_quiet](./ceccomp-doc/emu_quiet.png)
 
 ## Trace
 
