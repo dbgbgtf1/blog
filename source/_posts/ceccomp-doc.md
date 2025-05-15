@@ -12,7 +12,7 @@ ceccomp - the seccomp analyze tools
 
 ```
 usage: ceccomp [subcommand] [args] [options]
-    [subcommand]: asm|disasm|emu|trace|version|help
+    [subcommand]: asm|disasm|emu|trace|probe|version|help
 ```
 
 # CONCEPT
@@ -38,8 +38,9 @@ ceccomp is a seccomp analyze tool written in C.
 
 Asm can assemble ***TEXT*** to ***RAW***  
 Disasm can disassemble ***RAW*** to ***TEXT***  
-Emu can show what will happen(KILL?ALLOW?TRACE?) when the given syscall_nr are called.  
-Trace can atomaticlly trace the given [ program or pid ], and try to analyze its seccomp rules.
+Emu can show what will happen(KILL?ALLOW?TRACE?) when the given syscall_nr are called  
+Trace can trace the given [ program or pid ], and try to analyze its seccomp rules  
+Probe can trace the given PROGRAM, and emulate common syscall_nr with quiet mode
 
 # INSTALL
 
@@ -88,6 +89,9 @@ Disassemble from ***RAW*** to ***TEXT***
 
 Example:  
 ![disasm](./ceccomp-doc/disasm.png)
+> asm and then disasm!
+
+![asm_disasm](./ceccomp-doc/asm_disasm.png)
 
 ## Emulate
 
@@ -127,13 +131,26 @@ Example:
 
 ![trace_chrome](./ceccomp-doc/trace_pid.png)
 
+## Probe
+
+`ceccomp probe [ --arch= ] PROGRAM [ program-args ]`
+
+Probe can trace the program and then emulate the common syscall_nr
+
+> It can be useful to run a quick check. Pretty useful most times
+
+Example:  
+![probe](./ceccomp-doc/probe.png)
+
 ## Option
 
-`arch` is an option can be used in `asm disasm emu trace`
+`arch` is an option can be used in `asm disasm emu trace probe`
 
 `arch` can be set to your cpu arch when not specified  
 if this won't work for you, `--arch=` will be necessary
 (This is only tested in x86_64 and aarch64, if anything goes wrong, open an issue plz  
+
+> But be sure not to add `--arch=` after program
 
 # SUPPORTED ARCH
 
