@@ -100,6 +100,7 @@ Example:
 Emulate what will happen if `syscall (nr, args ...)` were called
 
 `args[0-5]` and `ip`(instruction pointer) are default as 0  
+`--quiet` mode only show the return value of emu
 
 > It can be useful when you don't want to read ***TEXT***
 
