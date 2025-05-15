@@ -95,7 +95,7 @@ Example:
 
 ## Emulate
 
-`ceccomp emu [ --arch= ] bpftext syscall_nr [ args[0-5] ip ]`
+`ceccomp emu [ --arch= ] [ --quiet ] bpftext syscall_nr [ args[0-5] ip ]`
 
 Emulate what will happen if `syscall (nr, args ...)` were called
 
@@ -111,7 +111,7 @@ Example:
 
 ## Trace
 
-`ceccomp trace [ PROGRAM [ program-args ]]|[ --pid= [ --arch= ] ]`
+`ceccomp trace [ PROGRAM [ program-args ] ] | [ [ --arch= ] --pid= ]`
 
 Trace can trace program ***RAW*** out, and then print it out to ***TEXT***  
 Trace can also trace a specified pid, and then print the filter of pid out to ***TEXT***  
