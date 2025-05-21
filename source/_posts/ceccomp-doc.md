@@ -18,36 +18,36 @@ usage: ceccomp [subcommand] [args] [options]
 # CONCEPT
 
 Kernel load the seccomp with ***RAW BPF BYTES***  
-which may look like this
+which may look like this  
 ![raw](./ceccomp-doc/raw.png)
 
 After ceccomp resolve the ***RAW BPF BYTES***, it can print out ***HUMAN READABLE TEXT***  
-May look like this
+May look like this  
 ![trace](./ceccomp-doc/trace.png)
 
 I will call ***HUMAN READABLE TEXT*** with ***TEXT***
 , and ***RAW BPF BYTES*** with ***RAW*** later
 
 Note that the `Line CODE JT JF K` are not necessary part of ***TEXT***, I just decided to print it  
-
 > So be sure to understand what ***TEXT*** and ***RAW*** means
 
 # DESCRIPTION
 
 ceccomp is a seccomp analyze tool written in C.
 
-Asm can assemble ***TEXT*** to ***RAW***  
-Disasm can disassemble ***RAW*** to ***TEXT***  
-Emu can show what will happen(KILL?ALLOW?TRACE?) when the given syscall_nr are called  
-Trace can trace the given [ program or pid ], and try to analyze its seccomp rules  
-Probe can trace the given PROGRAM, and emulate common syscall_nr with quiet mode
+Asm assemble ***TEXT*** to ***RAW***  
+Disasm disassemble ***RAW*** to ***TEXT***  
+Emu show what will happen(KILL?ALLOW?TRACE?) when the given syscall_nr are called  
+Trace trace the given [ program or pid ], and try to analyze its seccomp rules  
+Probe trace the given PROGRAM, and emulate common syscall_nr with quiet mode
 
 # INSTALL
 
 For archlinux users, try `yay ceccomp`
 It's on the aur repo now!
 
-For others, github install is available now:)
+For others, github install is available now  
+Ceccomp is still actively update, so remember to update sometimes:)
 ```
 git clone git@github.com:dbgbgtf1/Ceccomp.git
 cd Ceccomp
@@ -59,11 +59,12 @@ sudo make install
 
 ## Assemble
 
-`ceccomp asm [ --arch= ] [ --fmt= ] bpftext`
+`ceccomp asm	[ --arch= ] [ file ] [ --fmt= ]`
 
 Assemble the ***TEXT*** to ***RAW***
 
-`fmt` can be set to `hexfmt`, `raw` and `hexline`, default as `hexline`
+`fmt` can be set to `hexfmt`, `raw` and `hexline`, default as `hexline`  
+`file` should be the ***TEXT*** file, but it is default as `stdin`
 
 > It could be useful when you need to write your own seccomp
 
@@ -80,7 +81,7 @@ Example:
 
 ## Disassemble
 
-`ceccomp disasm [ --arch= ] bpftext`
+`ceccomp disasm	[ --arch= ] [ file ]`
 
 Disassemble from ***RAW*** to ***TEXT***
 
@@ -95,7 +96,7 @@ Example:
 
 ## Emulate
 
-`ceccomp emu [ --arch= ] [ --quiet ] bpftext syscall_nr [ args[0-5] ip ]`
+`ceccomp emu	[ --arch= ] [ file ] [ --quiet ] syscall_nr [ args[0-5] ip ]`
 
 Emulate what will happen if `syscall (nr, args ...)` were called
 
@@ -110,9 +111,21 @@ Example:
 
 ![emu_quiet](./ceccomp-doc/emu_quiet.png)
 
+## Probe
+
+`ceccomp probe	[ --output= ] [ --arch= ] PROGRAM [ program-args ]`
+
+Probe can trace the program and then emulate the common syscall_nr
+
+> It can be useful to run a quick check. Pretty useful most times
+
+Example:  
+![probe](./ceccomp-doc/probe.png)
+
 ## Trace
 
-`ceccomp trace [ PROGRAM [ program-args ] ] | [ [ --arch= ] --pid= ]`
+`ceccomp trace	[ --output= ] [ --arch= ] --pid=`
+`ceccomp trace	[ --output= ] PROGRAM [ program-args ]`
 
 Trace can trace program ***RAW*** out, and then print it out to ***TEXT***  
 Trace can also trace a specified pid, and then print the filter of pid out to ***TEXT***  
@@ -132,26 +145,22 @@ Example:
 
 ![trace_chrome](./ceccomp-doc/trace_pid.png)
 
-## Probe
-
-`ceccomp probe [ --arch= ] PROGRAM [ program-args ]`
-
-Probe can trace the program and then emulate the common syscall_nr
-
-> It can be useful to run a quick check. Pretty useful most times
-
-Example:  
-![probe](./ceccomp-doc/probe.png)
-
 ## Option
-
-`arch` is an option can be used in `asm disasm emu trace probe`
 
 `arch` can be set to your cpu arch when not specified  
 if this won't work for you, `--arch=` will be necessary
-(This is only tested in x86_64 and aarch64, if anything goes wrong, open an issue plz  
+> This is only tested in x86_64 and aarch64, if anything goes wrong, open an issue plz  
 
-> But be sure not to add `--arch=` after program
+`output` is used to avoid ceccomp output mixed with program output, and default as stderr
+if `stderr` still mixed with program stderr output  
+use `--output=file`, ceccomp output will be written into the file
+> asm disasm emu still print to stdout  
+> trace probe print to stderr as default
+
+### output tricks
+
+![output_trick](./ceccomp-doc/output_trick.png)
+![output_trick1](./ceccomp-doc/output_trick1.png)
 
 # SUPPORTED ARCH
 
