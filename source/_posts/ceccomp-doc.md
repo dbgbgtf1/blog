@@ -59,7 +59,7 @@ sudo make install
 
 ## Assemble
 
-`ceccomp asm	[ --arch= ] [ file ] [ --fmt= ]`
+`ceccomp asm     [ -a ARCH ] [ -f FMT ] [ text ]`
 
 Assemble the ***TEXT*** to ***RAW***
 
@@ -81,7 +81,7 @@ Example:
 
 ## Disassemble
 
-`ceccomp disasm	[ --arch= ] [ file ]`
+`ceccomp disasm  [ -a ARCH ] [ raw ]`
 
 Disassemble from ***RAW*** to ***TEXT***
 
@@ -96,7 +96,7 @@ Example:
 
 ## Emulate
 
-`ceccomp emu	[ --arch= ] [ file ] [ --quiet ] syscall_nr [ args[0-5] ip ]`
+`ceccomp emu     [ -a ARCH ] [ -q ] text syscall_nr [ args[0-5] ip ]`
 
 Emulate what will happen if `syscall (nr, args ...)` were called
 
@@ -113,7 +113,7 @@ Example:
 
 ## Probe
 
-`ceccomp probe	[ --output= ] [ --arch= ] PROGRAM [ program-args ]`
+`ceccomp probe   [ -a ARCH ] [ -o FILE ] PROGRAM [ program-args ]`
 
 Probe can trace the program and then emulate the common syscall_nr
 
@@ -124,8 +124,10 @@ Example:
 
 ## Trace
 
-`ceccomp trace	[ --output= ] [ --arch= ] --pid=`
-`ceccomp trace	[ --output= ] PROGRAM [ program-args ]`
+```
+ceccomp trace   [ -a ARCH ] [ -o FILE ] -p PID
+                [ -o FILE ] PROGRAM [ program-args ]
+```
 
 Trace can trace program ***RAW*** out, and then print it out to ***TEXT***  
 Trace can also trace a specified pid, and then print the filter of pid out to ***TEXT***  
