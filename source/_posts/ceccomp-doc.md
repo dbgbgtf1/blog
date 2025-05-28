@@ -184,6 +184,60 @@ use `--output=file`, ceccomp output will be written into the file
 - s390x
 - riscv64
 
+# SUPPOERED INS
+
+[chk_code_allowed](https://elixir.bootlin.com/linux/v6.14.4/source/net/core/filter.c#L981)
+```c
+BPF_LD | BPF_W | BPF_ABS:
+// BPF_LDX | BPF_W | BPF_ABS:
+// BPF_LDX | BPF_ABC doesn't belong to cBPF
+BPF_LD | BPF_W | BPF_LEN:
+BPF_LDX | BPF_W | BPF_LEN:
+BPF_LD | BPF_IMM:
+BPF_LDX | BPF_IMM:
+BPF_LD | BPF_MEM:
+BPF_LDX | BPF_MEM:
+
+BPF_ST:
+BPF_STX:
+
+BPF_ALU | BPF_ADD | BPF_K:
+BPF_ALU | BPF_ADD | BPF_X:
+BPF_ALU | BPF_SUB | BPF_K:
+BPF_ALU | BPF_SUB | BPF_X:
+BPF_ALU | BPF_MUL | BPF_K:
+BPF_ALU | BPF_MUL | BPF_X:
+BPF_ALU | BPF_DIV | BPF_K:
+BPF_ALU | BPF_DIV | BPF_X:
+BPF_ALU | BPF_AND | BPF_K:
+BPF_ALU | BPF_AND | BPF_X:
+BPF_ALU | BPF_OR | BPF_K:
+BPF_ALU | BPF_OR | BPF_X:
+BPF_ALU | BPF_XOR | BPF_K:
+BPF_ALU | BPF_XOR | BPF_X:
+BPF_ALU | BPF_LSH | BPF_K:
+BPF_ALU | BPF_LSH | BPF_X:
+BPF_ALU | BPF_RSH | BPF_K:
+BPF_ALU | BPF_RSH | BPF_X:
+BPF_ALU | BPF_NEG:
+
+BPF_JMP | BPF_JA:
+BPF_JMP | BPF_JEQ | BPF_K:
+BPF_JMP | BPF_JEQ | BPF_X:
+BPF_JMP | BPF_JGE | BPF_K:
+BPF_JMP | BPF_JGE | BPF_X:
+BPF_JMP | BPF_JGT | BPF_K:
+BPF_JMP | BPF_JGT | BPF_X:
+BPF_JMP | BPF_JSET | BPF_K:
+BPF_JMP | BPF_JSET | BPF_X:
+
+BPF_MISC | BPF_TAX:
+BPF_MISC | BPF_TXA:
+
+BPF_RET | BPF_K:
+BPF_RET | BPF_A:
+```
+
 # I Need You
 
 Tell me what do you think!
