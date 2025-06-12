@@ -24,12 +24,14 @@ GitHub:https://github.com/dbgbgtf1
 [ArchLinux](https://dbgtf.org/Arch/)
 [bspwm](https://dbgtf.org/bspwm/)
 
+# 写过的项目
+Ceccomp!
+https://github.com/dbgbgtf1/Ceccomp
+
 # 我喜欢？
 🚴，爽！
 🏎，帅！
 
 附上我最喜欢的一位F1车手和公路车手
 ![kimi](/assets/kimi.jpg)
-![pogacar](/assets/pogacar.png)
-
-
+![pogacar](/assets/pogacar/pogacar0.png)
