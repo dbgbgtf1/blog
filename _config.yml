@@ -97,6 +97,13 @@ ignore:
 ## Themes: https://hexo.io/themes/
 theme: stellar
 
+style:
+  header_prefix:
+  h2: '2'
+  h3: '3'
+  h4: '4'
+  h5: '5'
+
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
