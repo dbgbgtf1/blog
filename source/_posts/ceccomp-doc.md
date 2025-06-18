@@ -23,7 +23,7 @@ which may look like this
 
 After ceccomp resolve the ***RAW BPF BYTES***, it can print out ***HUMAN READABLE TEXT***  
 May look like this  
-![trace](./ceccomp-doc/trace.png)
+![text](./ceccomp-doc/text.png)
 
 I will call ***HUMAN READABLE TEXT*** with ***TEXT***
 , and ***RAW BPF BYTES*** with ***RAW*** later
@@ -161,8 +161,8 @@ use `--output=file`, ceccomp output will be written into the file
 
 ### output tricks
 
-![output_trick](./ceccomp-doc/output_trick.png)
-![output_trick1](./ceccomp-doc/output_trick1.png)
+![output_trick](./ceccomp-doc/output_trick.png)  
+In this way, output can be separate from program output
 
 # SUPPORTED ARCH
 
