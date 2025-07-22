@@ -2,10 +2,6 @@
     url: https://rocketma.dev
     avatar: /assets/rocket_avatar.png
 
-  - title: jbnrz
-    url: https://jbnrz.com.cn/
-    avatar: /assets/jbnrz_avatar.jpg
-
   - title: Mak4R1
     url: https://mak4r1.com
     avatar: /assets/mak_avatar.jpg
@@ -17,3 +13,7 @@
   - title: 洛元の小屋
     url: https://blog.dimeta.top/
     avatar: https://blog.dimeta.top/upload/avatar.jpg
+
+  - title: int_巴比妥酸
+    url: https://imsy.cc/
+    avatar: https://api.imsy.cc/avatar.png
