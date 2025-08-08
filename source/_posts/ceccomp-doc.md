@@ -75,9 +75,7 @@ Before that, take the disasm result as example
 Example:  
 > `--fmt` examples
 
-![asm_raw](./ceccomp-doc/asm_raw.png)  
-![asm_hexline](./ceccomp-doc/asm_hexline.png)  
-![asm_hexfmt](./ceccomp-doc/asm_hexfmt.png)
+![asm](./ceccomp-doc/asm.png)
 
 ## Disassemble
 
