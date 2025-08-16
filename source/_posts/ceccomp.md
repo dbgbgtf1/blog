@@ -73,6 +73,5 @@ PS: 这一部分为v2.3时期补充，发现当前没有和内核完全贴合，
 
 快去试试吧！如果有问题欢迎提`issue`或是`pr`！
 
-[文档地址](https://dbgtf.org/ceccomp-doc/)
 [项目地址](https://github.com/dbgbgtf1/Ceccomp/tree/main)
 
