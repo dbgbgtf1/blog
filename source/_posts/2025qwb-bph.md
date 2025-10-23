@@ -38,7 +38,7 @@ tags: houseof
 `fp->_wide_data->_IO_write_ptr > fp->_wide_data->_IO_write_base || _IO_in_put_mode (fp)`
 才可以执行到_IO_switch_to_wget_mode，这里我没有特意调整也满足了，不过可以留意一下
 
-![_IO_wfile_seekoff](./2025qwb-bph/_IO_wfile_seekoff.png)
+![IO_wfile_seekoff](./2025qwb-bph/IO_wfile_seekoff.png)
 
 最终实现ORW读flag
 
