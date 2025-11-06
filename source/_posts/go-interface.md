@@ -5,6 +5,21 @@ categories: beyond-ctf
 tags: coding
 ---
 
+在b站看到各食品讲解go的interface，引发我的兴趣[007-go语言中的interface(上)原理](https://www.bilibili.com/video/BV1jd83eFELr/?share_source=copy_web&vd_source=79cc050c65d9a648a2447b7dce9864f9)
+
+其中给出了一个模型来解释go的interface在内存上的形状，这样也许能更好理解一些
+```go
+package main
+
+import "fmt"
+import "unsafe"
+
+type interface_struct struct {
+    Type unsafe.Pointer
+    Data unsafe.Pointer
+}
+```
+
 # 特性理解
 
 go的interface有点像cpp的抽象类里面的虚函数，但是又由于go本身的特性，导致其和cpp还是有一些区别
