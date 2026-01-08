@@ -1,8 +1,8 @@
 ---
-title: ceccomp
+title: ceccomp-blog-1
 date: 2025-05-07 21:37:00
-categories: beyond-ctf
-tags: 开源
+categories: ceccomp-dev-blog
+tags: coding
 ---
 
 # 前言
