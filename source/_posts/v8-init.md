@@ -39,8 +39,7 @@ Pointer:    |________________address______________w1|
 
 Object是v8中最重要的数据结构之一了，几乎所有东西都套上了这一层模板来表示，应该只有smi不是使用Object对象来表示的，因为smi实在太常用了。只不过根据种类不同，Object自身结构体也会由于继承而不同
 
-下图可以看到Object延伸了N个结构，在js中可以用来操作的数组，对象，函数，在js中不可见的map，也都用Object表示。[原网址](https://v8docs.nodesource.com/node-18.2/dc/d0a/classv8_1_1_value.html)
-![class_ref](./v8-init/class_ref.png)
+在链接中可以看到Object延伸了N个结构，在js中可以用来操作的数组，对象，函数，在js中不可见的map，也都用Object表示。[class-ref](https://v8docs.nodesource.com/node-18.2/dc/d0a/classv8_1_1_value.html)
 
 具体Object的结构体长啥样，这方面网上资料很多，比如这个[https://blog.wingszeng.top/v8-pwn-basics-1-jsobject/]，我就简单总结下目前的理解（并且刚开始学没怎么用到这个结构体的复杂的部分，所以讲的还是比较浅显）
 
