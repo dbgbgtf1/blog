@@ -2,7 +2,7 @@
 title: 在编译linux kernel遇到的一个小问题
 date: 2025-05-08 14:26:21
 categories: beyond-ctf
-tags: 开源
+tags: coding
 ---
 
 # 错误发生过程

@@ -2,7 +2,7 @@
 title: polybar状态栏增加任务显示
 date: 2025-04-12
 categories: beyond-ctf
-tags: 开源
+tags: coding
 ---
 
 # 前言

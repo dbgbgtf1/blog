@@ -2,7 +2,7 @@
 title: C_notes
 date: 2025-06-17
 categories: beyond-ctf
-tags: 开源
+tags: coding
 ---
 
 最近写c写的比较多，和int聊了聊，总结一下我对于c语言的一些理解
