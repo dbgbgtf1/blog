@@ -1,7 +1,7 @@
 ---
 title: v8研究笔记
 date: 2025-12-26 11:29:00
-categories: some-ctf
+categories: chrome/v8研究
 tags: v8
 ---
 
