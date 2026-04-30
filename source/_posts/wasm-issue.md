@@ -2,7 +2,7 @@
 title: wasm-issue
 date: 2026-04-20 13:29:28
 categories: chrome/v8研究
-tags: v8
+tags: [ wasm, v8, sandbox ]
 ---
 介绍下实习的时候师傅给我的v8沙箱逃逸poc. 首先两句话带过一下v8的沙箱吧.
 先说一点, 指针压缩和沙箱不是同一个东西, 最开始我也搞混了这两点.
