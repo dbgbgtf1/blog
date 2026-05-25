@@ -2,7 +2,7 @@
 title: one way from bytecode escape to shellcode in v8
 date: 2026-04-30 16:46:36
 categories: chrome/v8研究
-tags: [ v8, bytecode ]
+tags: [ wasm, v8, bytecode ]
 ---
 
 ## 背景介绍
