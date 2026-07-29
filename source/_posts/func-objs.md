@@ -1,8 +1,8 @@
 ---
 title: 函数式和面向对象
 date: 2025-11-13 09:15:20
-categories: beyond-ctf
-tags: coding
+categories: coding
+tags: [ FP, OOP ]
 ---
 
 # 起因

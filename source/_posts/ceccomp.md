@@ -2,7 +2,7 @@
 title: ceccomp-blog-1
 date: 2025-05-07 21:37:00
 categories: ceccomp-dev-blog
-tags: coding
+tags: [ ceccomp, c ]
 ---
 
 # 前言

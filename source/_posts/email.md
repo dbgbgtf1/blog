@@ -1,8 +1,8 @@
 ---
 title: old style glibc：用邮箱发送patch
 date: 2025-04-03 
-categories: beyond-ctf
-tags: 开源
+categories: coding
+tags: [ glibc, c, heap ]
 ---
 > 特别鸣谢[🚀](https://rocketma.dev)帮助我配置邮箱等等
 

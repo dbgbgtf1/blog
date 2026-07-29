@@ -1,8 +1,8 @@
 ---
 title: bspwm,sxhkd配置一个平铺式窗口管理器
 date: 2025-04-05
-categories: beyond-ctf
-tags: Linux
+categories: Linux Desktop
+tags: [ linux, bspwm, sxhkd ]
 ---
 # 前言
 最开始我用ArchLinux(其实也就一个月左右吧)，是用的🚀推荐的kde全家桶

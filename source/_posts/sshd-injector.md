@@ -1,8 +1,8 @@
 ---
 title: sshd内存码实现后门登陆
 date: 2025-07-17
-categories: beyond-ctf
-tags: coding
+categories: coding
+tags: [ sshd, ptrace, inline-hook ]
 ---
 
 # 前言

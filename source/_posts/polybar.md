@@ -1,8 +1,8 @@
 ---
 title: polybar状态栏增加任务显示
 date: 2025-04-12
-categories: beyond-ctf
-tags: coding
+categories: coding
+tags: [ cpp ]
 ---
 
 # 前言

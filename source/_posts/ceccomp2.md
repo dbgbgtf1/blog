@@ -2,7 +2,7 @@
 title: ceccomp-blog-2
 date: 2026-01-08 13:31:02
 categories: ceccomp-dev-blog
-tags: coding
+tags: [ ceccomp, c ]
 ---
 
 这个学期花了大把时间在重构ceccomp，用到了crafting interpreter中学到的编译器知识，设计了ceccomp自己的ir(Intermediate Representation)。这篇文章就当是ceccomp的开发blog兼自己的心得了

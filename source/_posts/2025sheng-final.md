@@ -1,8 +1,8 @@
 ---
 title: 2025浙江省赛决赛wp
 date: 2025-11-16 10:25:48
-categories: 2025-sheng
-tags: houseof
+categories: 2025-省赛
+tags: [ heap, houseof ]
 ---
 
 决赛依然只出了一道easy_calc，但是做的时候思路没有很清晰，所以花了比较久时间才出

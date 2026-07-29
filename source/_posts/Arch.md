@@ -1,8 +1,8 @@
 ---
 title: 终于还是用上了Arch
 date: 2025-3-28
-categories: beyond-ctf
-tags: Linux
+categories: Linux Desktop
+tags: [ linux, archlinux ]
 ---
 
 # 前言
