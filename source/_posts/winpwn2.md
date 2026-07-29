@@ -223,6 +223,58 @@ void helper_function () {}
 
 > MessageBoxA和MessageBoxW在User32.dll, 这个dll尽管常见, 但并不是默认加载的. 所以shellcode里还多了一步先获取LoadLibraryW加载User32.dll的过程
 
+> test.h
+```c
+#ifndef TEST_H
+#define TEST_H
+
+#include <Windows.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <winternl.h>
+
+typedef struct
+{
+  uint64_t user32;
+  uint64_t ntdll;
+  uint64_t kernel32;
+  uint64_t kernelbase;
+} dll_base;
+
+// 0x138 bytes (sizeof)
+typedef struct
+{
+  struct _LIST_ENTRY InLoadOrderLinks;           // 0x0
+  struct _LIST_ENTRY InMemoryOrderLinks;         // 0x10
+  struct _LIST_ENTRY InInitializationOrderLinks; // 0x20
+  VOID *DllBase;                                 // 0x30
+  VOID *EntryPoint;                              // 0x38
+  ULONG SizeOfImage;                             // 0x40
+  struct _UNICODE_STRING FullDllName;            // 0x48
+  struct _UNICODE_STRING BaseDllName;            // 0x58
+  // there are some more, but we don't need those
+} my_LDR_DATA_TABLE_ENTRY;
+
+typedef enum
+{
+  NOT_FOUND,
+  FUNC_DIRECT,
+  FUNC_FORWARDER
+} func_result;
+
+static bool my_memicmp (void *dst, void *src, size_t size);
+static bool my_memcmp (void *dst, void *src, size_t size);
+static uint64_t my_strlen (void *dst);
+static uint32_t search_func (uint64_t dll_base, char *func_name,
+                             PIMAGE_EXPORT_DIRECTORY export_table);
+static func_result get_func (uint64_t dll_base, char *func_name,
+                             uint64_t *result);
+static void get_dll_base (struct _PEB_LDR_DATA *ldr, dll_base *bases);
+
+#endif
+```
+
+> test.c
 ```c
 #include "test.h"
 #include <Windows.h>
@@ -413,6 +465,7 @@ get_dll_base (struct _PEB_LDR_DATA *ldr, dll_base *bases)
 #pragma clang section text = ""
 ```
 
+> compiler.py
 ```python
 from pathlib import Path
 import subprocess
