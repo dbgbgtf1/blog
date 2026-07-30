@@ -7,7 +7,7 @@ tags: [ windows, coding, seh ]
 
 ## SEH基本模型
 
-今天了解了一下windows的SEH机制, 顺带和其他语言的异常处理模型做了对比. 有趣的是我意识到我更擅长从几个基本公理来展开学习, 这篇文章就以这样的思路试试看. 我会给出windows SEH的几个基本定理, 随后用这几个定理来解释各类现象
+今天了解了一下windows的SEH机制, 顺带和其他语言的异常处理模型做了对比. 有趣的是我意识到我更擅长从几个基本公理来展开学习, 这篇文章就以这样的思路试试看. 我会给出windows SEH的几个基本公理, 随后用这几个公理来解释各类现象
 
 1. `__try`定义一个受保护区域, 该区域代码及其调用的代码在触发异常时, 异常会被抛出. 可以理解为异常的生产者
 2. `__leave`可以跳出当前的`__try`块
@@ -41,7 +41,7 @@ finally:
 
 ## 实际案例
 
-这里是微软在[结构化异常处理 （C/C++）](https://learn.microsoft.com/zh-cn/cpp/cpp/structured-exception-handling-c-cpp?view=msvc-170)给出的一个案例, 根据刚刚给出的几条定理来模拟.
+这里是微软在[结构化异常处理 （C/C++）](https://learn.microsoft.com/zh-cn/cpp/cpp/structured-exception-handling-c-cpp?view=msvc-170)给出的一个案例, 根据刚刚给出的几条公理来模拟.
 1. 在`RAISE_AN_EXCEPTION`前没有疑问. 输出应该是`hello\n` `in try\n` `in try\n`
 2. 在`RAISE_AN_EXCEPTION`后, 根据**公理5**, 程序逐步向外搜索`__except`, 并执行其中的filter语句, 于是输出`in filter\n`
 3. `__except`返回了`EXCEPTION_EXECUTE_HANDLER`, 根据**公理6**, 执行unwind
