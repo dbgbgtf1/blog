@@ -1,8 +1,8 @@
 ---
-title: windows安全机制学习-cfg
+title: windows安全机制学习 cfg aslr
 date: 2026-7-19
 categories: windows
-tag: [ windows, cfg ]
+tag: [ windows, cfg, aslr ]
 ---
 
 最近想开个新坑学习下windows下的二进制知识
@@ -11,7 +11,7 @@ tag: [ windows, cfg ]
 
 aslr是地址随机化. dep和nx一个意思, 都是将执行段和数据段区分的缓解措施. 只不过在windows上更习惯叫做dep. cfg(Control Flow Guard).
 
-windows下没有checksec, 所以我们用msvc的dumpbin来检查这几个选项是否开启.
+windows也有checksec, 但这里先试试用msvc的dumpbin来检查这几个选项是否开启.
 `dumpbin /headers .\target.exe`
 找到其中`OPTIONAL HEADER VALUES`的段, 再其中有`DLL characteristics`. 可以观察到几个选项是否开启Aslr(Dynamic base), dep(NX compatible), cfg(Control Flow Guard)
 ```
@@ -32,9 +32,32 @@ OPTIONAL HEADER VALUES
 
 > [微软cfg文档](https://learn.microsoft.com/en-us/windows/win32/secbp/control-flow-guard)
 
+## windows aslr
+
+windows的aslr与linux有极大不同. linux上的随机以进程重启为单位, 只要进程重启, 所有受到aslr影响的基地址都会发生改变. 而windows只有在系统重启才会保证所有地址都再进行一次随机化.
+
+| 生效时机\影响的内存段基地址 | stack | heap | exe/elf | dll/lib |
+| --- | --- | --- | --- | --- |
+| linux进程重启 | ✅ | ✅ | ✅ | ✅ |
+| windows进程重启 | ✅ | ✅ | ❎ | ❎ |
+| windows系统重启 | ✅ | ✅ | ✅ | ✅ |
+
+windows在常规的ASLR上还有额外的两项缓解措施: Mandatory ASLR, Bottom-Up ASLR. 分别默认关闭和默认开启
+![exploit protections](./winpwn1/exploit_protections.png)
+
+### Mandatory ASLR
+
+启用“强制映像随机化（Mandatory ASLR）”后, Windows 会尝试将原本**未声明DYNAMIC_BASE、但具备重定位信息的映像**也随机重定位并运行. 它不改变 ASLR 的随机化算法或强度, 而是扩大 ASLR 的适用对象. 此外若是再开启`DisallowStrippedImages`功能, 会导致没有.reloc段的映像无法被加载
+
+### Bottom-Up ASLR
+
+> 在 Windows 8 之前，自下而上和自上而下的分配不是由 ASLR 随机分配的。即通过VirtualAlloc和MapViewOfFile等函数进行的分配没有熵，因此可以放置在内存中的可预测位置（除非是非确定性应用程序行为）。虽然某些内存区域有自己的基本随机化，例如堆、堆栈、TEB 和 PEB，但所有其他自下而上和自上而下的分配都不是随机化的。
+> 从 Windows 8 开始，所有自下而上和自上而下分配的基址都是显式随机化的。这是通过随机化自下而上和自上而下分配从给定进程开始的地址来实现的。通过这种方式，地址空间内的碎片最小化，同时还实现了随机化所有未显式基于的内存分配的基址的好处
+以上内容节选自[ASLR机制分析报告](https://www.cnblogs.com/XiuzhuKirakira/p/18049457#bottomupaslr%E6%9C%BA%E5%88%B6)
+
 ## cfg是什么以及如何工作
 
-网上详细的资料很多, 推荐阅读[Analysis of the Windows Control Flow Guard](https://dl.acm.org/doi/10.1145/3664476.3670432). 由于是英文, 让ai翻译了一下, 可以作简单参考. ![Analysis of the Windows Control Flow Guard-ZH](./winpwn1/cfg2-zh.md)
+网上详细的资料很多, 推荐阅读[Analysis of the Windows Control Flow Guard](https://dl.acm.org/doi/10.1145/3664476.3670432). 由于是英文, 让ai翻译了一下, 可以作简单参考. ![Analysis of the Windows Control Flow Guard-ZH](/downloads/cfg-zh.md.tar.gz)
 
 这里先只简单介绍下, 哪天研究更深入了再补充.
 
