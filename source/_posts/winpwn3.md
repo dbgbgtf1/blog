@@ -75,7 +75,9 @@ finally:
 
 本文一直在将SEH与其他语言异常处理进行比对, 一直忽略一个差异是两者处理的异常本身就不同
 
-> SEH 是 Windows 提供的异常分发与栈展开机制。它常处理访问违规、除零、非法指令、守护页等 CPU/Windows 异常，也可由`RaiseException` 产生软件异常。其他语言的异常通常是该语言运行时定义的异常对象和类型系统；它们也可能由运行时自动产生，例如Python 的 `ZeroDivisionError`、Java 的 `NullPointerException`。
+> SEH 是 Windows 提供的异常分发与栈展开机制。它常处理访问违规、除零、非法指令、守护页等 CPU/Windows 异常，也可由`RaiseException` 产生软件异常
+
+> 其他语言的异常通常是该语言运行时定义的异常对象和类型系统；它们也可能由运行时自动产生，例如Python 的 `ZeroDivisionError`、Java 的 `NullPointerException`。
 
 ## 安全机制
 
