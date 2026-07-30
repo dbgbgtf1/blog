@@ -82,3 +82,87 @@ finally:
 ## 安全机制
 
 在x86时代, seh的恢复信息在栈上, 可能被攻击者利用. x64时代windows把这些信息放在了只读权限的.pdata上, 可以说基本彻底封死了seh的二进制利用.
+
+## windows其他异常处理与seh关系
+
+让ai整理了一个windows下异常处理流程图. 配合文字梳理一下:
+1. 极度简化的异常处理链顺序是 `first-chance` -> `VEH` -> `SEH` -> `UEF` -> `second-chance` -> `VCH`, 但该链条不完全准确, 请看后文分析更详细的情况
+2. `first-chance`和`second-chance`属于调试器决定的步骤, 调试器会根据策略决定是否声明处理完成当前异常以让程序恢复运行. 如调试器设置的断点`int 3`也会触发异常, 这种情况下调试器显然就会声明异常被处理完成, 不再走后续异常处理链条. 否则调试器可能不处理当前异常, 由后续异常处理机制来处理
+3. `VEH`是一个在`ntdll.dll`的函数指针链表, 其影响效力为进程全局. 无论异常发生在进程的哪个位置, 异常都可能走到此处
+4. `SEH`上面已经说的很详细了, 对比起`VEH`, `VCH`, `UEF`这种影响进程全局的异常处理机制来说, `SEH`的影响范围只在`__try`声明的范围内, 并且可以精确到线程, 是最精准的异常处理方式
+5. `UEF`基于SEH, 但其对进程范围生效, 并且生效范围晚于所有的`SEH`.(也许可以理解为一个括在main函数之外的`__try`?)
+6. `VCH`严格来说是异常恢复机制. 除了调试器之外, 无论是谁声明自己处理完成异常, 让程序恢复运行, 在恢复之前都要执行`VCH`. 影响范围为进程全局, 同样是挂在`ntdll.dll`的函数指针链表
+7. 如果以上错误处理机制都决定不处理该异常, 调试器会受到`second-chance`. 此时是异常处理链条的最后一环, 如果调试器选择不处理, 程序就会被正式终止, 选择恢复则会让程序恢复运行
+
+> 特别的, UEF在附加调试器时, 只会返回`EXCEPTION_CONTINUE_SEARCH`, 直接声明自己不对异常进行处理
+```
+  用户态异常发生
+  （CPU fault / int3 / RaiseException）
+    │
+    ▼
+  内核捕获并保存 CONTEXT、EXCEPTION_RECORD
+    │
+    ▼
+  [1] 调试器 first-chance？────────────── 无调试器 ─────────────┐
+    │ 有                                                        │
+    ▼                                                           │
+  调试器收到 EXCEPTION_DEBUG_EVENT                              │
+    │                                                           │
+    ├─ DBG_CONTINUE：调试器处理                                 │
+    │      └─ 内核恢复线程；VEH / SEH / UEF / VCH 不运行        │
+    │                                                           │
+    └─ DBG_EXCEPTION_NOT_HANDLED ───────────────────────────────┘
+    │
+    ▼
+  内核将异常交给目标进程 ntdll!KiUserExceptionDispatcher
+    │
+    ▼
+  [2] VEH 链（按链表顺序）
+    │
+    ├─ 某 VEH 返回 EXCEPTION_CONTINUE_EXECUTION
+    │      │
+    │      ▼
+    │    [5] VCH 链
+    │      │
+    │      ▼
+    │    NtContinue → 内核恢复 CONTEXT → 继续执行
+    │
+    └─ 所有 VEH 均 CONTINUE_SEARCH
+           │
+           ▼
+  [3] SEH / C++ EH：按栈帧寻找处理器
+           │
+           ├─ 找到可处理者
+           │      ├─ 继续执行型处理（或完成展开后进入处理块）
+           │      └─ 恢复路径中调用 [5] VCH，然后按新 CONTEXT 继续
+           │
+           └─ 所有普通 SEH / C++ handler 均不处理
+                  │
+                  ▼
+  [4] UEF / Top-level exception filter
+       UnhandledExceptionFilter
+         │
+         ├─ 应用通过 SetUnhandledExceptionFilter 安装的回调
+         │      │
+#if NOT_BEING_DEBUGGED
+         │      ├─ EXCEPTION_CONTINUE_EXECUTION
+         │      │      └─ [5] VCH → NtContinue → 恢复（很少应这样做）
+         │      ├─ EXCEPTION_EXECUTE_HANDLER
+         │      │      └─ 执行崩溃策略 / 终止；通常不再进入 VCH
+#endif   │      │
+         │      └─ EXCEPTION_CONTINUE_SEARCH
+         │
+         └─ 没有应用 UEF，或 UEF 继续搜索
+                  │
+                  ▼
+  [6] 调试器 second-chance？────────── 无调试器 ─→ WER / 进程终止
+         │ 有
+         ▼
+  调试器收到 second-chance EXCEPTION_DEBUG_EVENT
+         │
+         ├─ DBG_CONTINUE：调试器处理并恢复
+         │      └─ 不会倒回去调用 VCH
+         │
+         └─ DBG_EXCEPTION_NOT_HANDLED
+                └─ 系统终止进程
+```
