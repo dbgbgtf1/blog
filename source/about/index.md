@@ -13,22 +13,13 @@ GitHub: https://github.com/dbgbgtf1
 杭电某不知名菜鸡
 在0rays打pwn
 
-# 环境 & 🔧
-目前在用
-- 系统:ArchLinux
-- 编辑器:NeoVim
-- 窗口管理器:bspwm
-- etc
-我有几篇博客介绍了大致配置过程
-
-[ArchLinux](https://dbgtf.org/Arch/)
-[bspwm](https://dbgtf.org/bspwm/)
-
 # 个人项目
 Ceccomp
-https://github.com/dbgbgtf1/Ceccomp
+https://github.com/ceccomp/ceccomp
 sshd_injector
 https://github.com/dbgbgtf1/sshd_injector
+codex_auditor
+https://github.com/0RAYS/codex-auditor
 
 # 我喜欢？
 🚴，爽！
