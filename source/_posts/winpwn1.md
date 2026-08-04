@@ -57,7 +57,7 @@ windows在常规的ASLR上还有额外的两项缓解措施: Mandatory ASLR, Bot
 
 ## cfg是什么以及如何工作
 
-网上详细的资料很多, 推荐阅读[Analysis of the Windows Control Flow Guard](https://dl.acm.org/doi/10.1145/3664476.3670432). 由于是英文, 让ai翻译了一下, 可以作简单参考. ![Analysis of the Windows Control Flow Guard-ZH](/downloads/cfg-zh.md.tar.gz)
+网上详细的资料很多, 推荐阅读[Analysis of the Windows Control Flow Guard](https://dl.acm.org/doi/10.1145/3664476.3670432). 由于是英文, 让ai翻译了一下, 可以作简单参考. [Analysis of the Windows Control Flow Guard-ZH](/downloads/cfg-zh.md.tar.gz)
 
 这里先只简单介绍下, 哪天研究更深入了再补充.
 
@@ -114,5 +114,3 @@ jscript9!Js::JavascriptOperators::HasItem+0x1b:
 - 利用cfg的0x10字节精度问题
 - 利用未启用cfg的映像
 - 更改只读段内存权限, 修改bitmap或`__guard_check_icall_fptr`指针为其他函数
-
-##
