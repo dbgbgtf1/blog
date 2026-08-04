@@ -4,7 +4,7 @@ title: about
 
 # 联系方式
 ID: dbgbgtf
-WX: CALL_ME_DBG
+WX: BRM-3K-57
 QQ: 88665013
 EMAIL: dudududuMaxVer@outlook.com
 GitHub: https://github.com/dbgbgtf1
