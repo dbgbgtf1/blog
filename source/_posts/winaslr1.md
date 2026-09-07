@@ -17,12 +17,13 @@ tag: [ windows, kaslr, side channel ]
 ### 相关概念
 
 - 页表: 将虚拟地址翻译为物理地址的多级树状结构, 由内核进行分配和维护
-- CR3(Control Register 3): 保存当前页表树的根节点的物理地址, 于当前执行环境强相关. 开启KPTI时, 用户/内核切换时会被显式重写
-- TLB(Translation Lookaside Buffer): 针对页表的缓存, 保存近期页表翻译结果. 于当前执行环境未必强相关. 本质只是用于加速CR3树查找的数据结构
+- CR3(Control Register 3): 保存当前页表树的根节点的物理地址, 与当前执行环境强相关. 开启KPTI时, 用户/内核切换时会被显式重写
+- TLB(Translation Lookaside Buffer): 针对页表的缓存, 保存近期页表翻译结果. 与当前执行环境未必强相关. 本质只是用于加速CR3树查找的数据结构
 
 ### 侧信道原理
 
-(KPTI的问题留到后面再讨论, 现在先不纠结KPTI是否开启, 暂时比较笼统的说TLB中存在对内核的映射)
+> KPTI的问题留到后面再讨论, 现在先不纠结KPTI是否开启, 暂时比较笼统的说TLB中存在对内核的映射)
+
 推荐阅读原文 [Prefetch Side-Channel Attacks: Bypassing SMAP and Kernel ASLR](https://gruss.cc/files/prefetch.pdf), 这里我只是简单记录下我的理解.
 
 用户态进程执行syscall时, 内核将执行代码片段的内存页放入TLB页表中, 退出至用户态时, 由于内存页有G(global)位豁免, 仍然不失效. 在用户态我们用prefetch去遍历试探内核可能在的虚拟地址. 则有两种情况, 1. 命中TLB中内核页表缓存, 返回速度很快. 2. 没有命中TLB中内核页表缓存, 继续走了慢分支遍历CR3寄存器的页表树, 也没有找到. 在intel cpu上, 这两种情况的时间差被证实足够可靠用来泄露内核虚拟地址.
