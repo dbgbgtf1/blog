@@ -71,7 +71,7 @@ tag: [ windows, kaslr, side channel ]
 
 再聊聊KPTI. 这个东西现在被证实只能有效防御meltdown, 而对于prefetch的防御不够充分. 先解释下KPTI工作原理吧.
 
-在没开启KPTI的情况下, 用户态进程下, 内核的全部页表会暴露在CR3寄存器的页表树之下, 导致了meltdown和spectre漏洞; 开启后, 内核将暴露的面收束到了用户态用来call内核态的一小部分页表(被叫做`trampline region`), 在切换内核/用户态时会覆盖CR3这个根节点来切换树.
+在没开启KPTI的情况下, 用户态进程下, 内核的全部页表会暴露在CR3寄存器的页表树之下. 开启后, 内核将暴露的面收束到了用户态用来call内核态的一小部分页表(被叫做`trampline region`), 在切换内核/用户态时会覆盖CR3这个根节点来切换树.
 
 对于meltdown这类依赖用户态下内核页表用来读的漏洞是致命的, 因为能够读取的范围缩小到了`trampline region`. 而对于prefetch来说, 只要用户态页表中存在一个固定内核偏移的内核态页表即可, 如果我判断到`0xffffabcd`是内核的`trampline region`, 并且确定`trampline region`相对内核本身的偏移是`0xabcd`, 那么我依然可以通过内核暴露的`trampline region`地址进行bypass kaslr
 
