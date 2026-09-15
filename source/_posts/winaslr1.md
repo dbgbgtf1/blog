@@ -69,12 +69,18 @@ tag: [ windows, kaslr, side channel ]
 
 ## KPTI
 
-再聊聊KPTI. 这个东西现在被证实只能有效防御meltdown, 而对于prefetch的防御不够充分. 先解释下KPTI工作原理吧.
+再聊聊KPTI. 这个东西现在被证实只能有效防御meltdown, 而无法防御prefetch. 先解释下KPTI工作原理吧.
 
 在没开启KPTI的情况下, 用户态进程下, 内核的全部页表会暴露在CR3寄存器的页表树之下. 开启后, 内核将暴露的面收束到了用户态用来call内核态的一小部分页表(被叫做`trampline region`), 在切换内核/用户态时会覆盖CR3这个根节点来切换树.
 
 对于meltdown这类依赖用户态下内核页表用来读的漏洞是致命的, 因为能够读取的范围缩小到了`trampline region`. 而对于prefetch来说, 只要用户态页表中存在一个固定内核偏移的内核态页表即可, 如果我判断到`0xffffabcd`是内核的`trampline region`, 并且确定`trampline region`相对内核本身的偏移是`0xabcd`, 那么我依然可以通过内核暴露的`trampline region`地址进行bypass kaslr
 
+> 这里没有特别区分CR3页表树和TLB, 因为TLB本质只是一个CR3页表树的缓存
+
+值得一提的是, KPTI也只是2018年左右软件层面对meltdown的临时策略, 在更新的intel cpu上可以通过硬件的方式来修复meltdown, 所以在新的cpu上反而可能不需要启用KPTI
+
+## 修复方案?
+
 论文中给出的修复方案是将`trampline region`相对于内核本身的偏移进行随机. 因为内核暴露的`trampline region`确实对于用户态已经是必要的内容了, 没法去掉该漏洞来彻底解决问题
 
-> 这里没有特别区分CR3页表树和TLB, 因为TLB本质只是一个CR3页表树的缓存
+即使2022年的论文已经给出了一种修复方案. 但目前为止, 在windows和linux上仍然可以通过该漏洞来绕过kaslr(不过amd cpu的侧信道信号似乎并不稳定), 我也在自己的intel电脑上成功复现. 猜测原因有二, 一是kaslr并不是最后的安全底线, 二是解耦内核入口和基地址会对syscall路径有性能损失, 而syscall这个热路径的性能代价过大. 所以两者都不约而同的选择了放弃修复该漏洞, 将工程精力投到了别的安全措施上.
