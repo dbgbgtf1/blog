@@ -1,9 +1,11 @@
 ---
-title: windows kaslr prefetch虚拟化研究
+title: prefetch bypass kaslr虚拟化研究
 date: 2026-8-26
-categories: windows
-tag: [ windows, kaslr, side channel ]
+categories: cpu
+tag: [ cpu, kernel, side channel ]
 ---
+
+> 本文实验环境在windows, 但prefetch侧信道的漏洞和特性理论上不受平台影响
 
 # 前言
 
