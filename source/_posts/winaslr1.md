@@ -5,7 +5,7 @@ categories: cpu
 tag: [ cpu, kernel, side channel ]
 ---
 
-> 本文实验环境在windows, 但prefetch侧信道的漏洞和特性理论上不受平台影响
+> 本文实验环境在windows, 但prefetch侧信道的漏洞和特性理论上不受平台影响, 而是受cpu型号影响
 
 # 前言
 
