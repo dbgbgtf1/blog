@@ -80,7 +80,7 @@ rolling_xor (uint8_t *output, uint8_t *input, uint64_t size, uint64_t *seed)
 ```
 
 再试了下更高强度的滚动异或加密, 区别是让下一步的解密依赖上一步的解密结果, 使得更难通过猜测合法x64机器码的方式来解出密钥. 但这里似乎由于强度给太过了, 导致`gpt6-sol`解决诱饵之后居然继续分析异常分支, 隐藏异常分支的目的也就失败了
-![64bit_analyze_vary](./anti-ai-reverse/64bit_analyze_vary.png.png)
+![64bit_analyze_vary](./anti-ai-reverse/64bit_analyze_vary.png)
 ```c
 void
 rolling_xor (uint8_t *output, const uint8_t *input, uint64_t size,
@@ -98,6 +98,8 @@ rolling_xor (uint8_t *output, const uint8_t *input, uint64_t size,
 
 出于好奇问了下`gpt6-sol`是如何解密的, 看到这里的思路对异或这种简单加密就已经是降维打击了, 比较难再去反制. 加上我认为这也已经超过了"让ai刚刚好掉进坑里"的程度(证据是ai在解密后继续挖异常分支), 所以没有尝试更复杂的加密算法
 ![entrophy](./anti-ai-reverse/entrophy.png)
+
+> 实验后感觉到ai有一个轻微倾向是在逆向过程中遇到什么就先解决什么, 导致在解决了先看到的复杂解密后忘记继续往下看. 如果该解密较简单, 或是用户要求"先整体再局部", 可能这里的吸引注意力来防止ai逆向的效果就不会那么好了
 
 > 总得来说我认为需要给ai一个难度恰到好处的解密. 其实这点对于人类也很好理解, 做陷阱题时如果发现陷阱太简单可能会怀疑是不是因为存在更深的正确答案, 反而是那种难度刚刚好的陷阱更容易掉进去
 
