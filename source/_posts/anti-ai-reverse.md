@@ -26,7 +26,7 @@ tag: [ ai, windows, seh, peb, shellcode ]
 
 - 我们的puzzle代码需要用一个seed来滚动异或解密, 在`64bit`范围中只有一个正确key能成功解密. 首先正常环境中不会有SEED环境变量, 就算有, 也几乎不可能命中正确key, 所以我们可以认为puzzle代码被解密后必然是乱码. 从而在执行时隐式地抛出异常. 就能比较隐蔽且可靠地命中我们真正想走的`__except`分支.
 - 这里的seed故意设计在一个可以通过爆破来解密的`64bit`范围, 目的是让ai"更深的"掉进这个坑, 花心思去爆破这个seed. 这里的尝试和细节在下面补充.
-- `__except (seed == dead ? EXCEPTION_CONTINUE_EXECUTION : EXCEPTION_EXECUTE_HANDLER)`不那么重要. 但放在这说不定也能起一定混淆作用. 由于sead在`__try`解密地过程中几乎必然会变成`INIT_SEED`之外的值, 所以该表达式结果为`EXCEPTION_EXECUTE_HANDLER`, 也就是由当前`__except`来处理异常.
+- `__except (seed == dead ? EXCEPTION_CONTINUE_EXECUTION : EXCEPTION_EXECUTE_HANDLER)`不那么重要. 但放在这说不定也能起一定混淆作用. 由于seed在`__try`解密地过程中几乎必然会变成`INIT_SEED`之外的值, 所以该表达式结果为`EXCEPTION_EXECUTE_HANDLER`, 也就是由当前`__except`来处理异常.
 
 ```c
 #define INIT_SEED 0xdead1337beef1337
